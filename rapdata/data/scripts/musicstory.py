@@ -1,12 +1,14 @@
-import urllib.parse
 import hmac
 import base64
+import logging
 import hashlib
-
 import requests
+import urllib.parse
 from xml.etree import ElementTree
 
 from data.models import Artist
+
+apilogger = logging.getLogger("apilogger")
 
 def sign(request, consumer_secret, token_secret = "", http_methode = 'GET'):
     a = request.split('?')
@@ -33,9 +35,10 @@ def sign(request, consumer_secret, token_secret = "", http_methode = 'GET'):
         request = request[:-3]
     return request
 
-def get_tokens(consumer_key, consumer_secret):
+def init_tokens(consumer_key, consumer_secret):
     url = "http://api.music-story.com/oauth/request_token?oauth_consumer_key=" + consumer_key
     url_signed = sign(url,consumer_secret)
+    apilogger.info('[GET] %s' % url)
     rq = requests.get(url_signed)
 
     tree = ElementTree.fromstring(rq.content)
@@ -43,24 +46,25 @@ def get_tokens(consumer_key, consumer_secret):
     token = data.find('token').text
     token_secret = data.find('token_secret').text
 
-    return token, token_secret
+    return CONSUMER_KEY, CONSUMER_SECRET, token, token_secret
 
-def get_artists(token, token_secret):
+def get_artists(consumer_secret, token, token_secret):
     artists = []
     url = "http://api.music-story.com/fr/genre/190/artists?oauth_token=" + token
-    url = sign(url,CONSUMER_SECRET,token_secret)
+    url = sign(url,consumer_secret,token_secret)
+    apilogger.info('[GET] %s' % url)
     rq = requests.get(url)
 
     root = ElementTree.fromstring(rq.content)
     nbPages = root.find('pageCount').text
     for name,id in zip(root.iter('name'),root.iter('id')):
-        ar = Artist(name.text,id.text)
-        artists.append(ar)
+        artists.append((name.text, id.text))
 
     '''
     for i in range(1, int(nbPages)):
         url = "http://api.music-story.com/fr/genre/190/artists?oauth_token=" + token + "&page=" + str(i)
         url = sign(url,CONSUMER_SECRET,token_secret)
+        apilogger.info('[REQUEST] %s' % url)
         rq = requests.get(url)
 
         root = ElementTree.fromstring(rq.content)
