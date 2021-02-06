@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
+import logging
 
 from data.models import MusicStoryTokens, Artist
 from data.scripts.musicstory import get_artists
@@ -6,7 +7,7 @@ from data.scripts.musicstory import get_artists
 dblogger = logging.getLogger("dblogger")
 
 class Command(BaseCommand):
-    help = 'actualize artist list'
+    help = 'get artists from musicstory'
 
     def handle(self, *args, **options):
         tokens = MusicStoryTokens.objects.all().first()

@@ -10,6 +10,8 @@ from data.models import Artist
 
 apilogger = logging.getLogger("apilogger")
 
+URL = "http://api.music-story.com"
+
 def sign(request, consumer_secret, token_secret = "", http_methode = 'GET'):
     a = request.split('?')
     host_uri = a[0]
@@ -36,7 +38,7 @@ def sign(request, consumer_secret, token_secret = "", http_methode = 'GET'):
     return request
 
 def init_tokens(consumer_key, consumer_secret):
-    url = "http://api.music-story.com/oauth/request_token?oauth_consumer_key=" + consumer_key
+    url = ("%s/oauth/request_token?oauth_consumer_key=%s" %  (URL, consumer_key))
     url_signed = sign(url,consumer_secret)
     apilogger.info('[GET] %s' % url)
     rq = requests.get(url_signed)
@@ -46,11 +48,11 @@ def init_tokens(consumer_key, consumer_secret):
     token = data.find('token').text
     token_secret = data.find('token_secret').text
 
-    return CONSUMER_KEY, CONSUMER_SECRET, token, token_secret
+    return consumer_key, consumer_secret, token, token_secret
 
 def get_artists(consumer_secret, token, token_secret):
     artists = []
-    url = "http://api.music-story.com/fr/genre/190/artists?oauth_token=" + token
+    url = ("%s/fr/genre/190/artists?oauth_token=%s" % (URL, token))
     url = sign(url,consumer_secret,token_secret)
     apilogger.info('[GET] %s' % url)
     rq = requests.get(url)

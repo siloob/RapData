@@ -129,7 +129,7 @@ LOGGING = {
             'style': '{',
         },
         'formatter_db': {
-            'format': '[DATABASE] {levelname} {asctime} {module} {message}',
+            'format': '[DATABASE] {levelname} {asctime} [{module}].upper() {message}',
             'style': '{',
         },
     },
