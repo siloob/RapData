@@ -1,2 +1,4 @@
 requests
 Django
+selenium
+beautifulsoup4

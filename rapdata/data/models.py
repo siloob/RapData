@@ -3,17 +3,20 @@ from django.db import models
 # Create your models here.
 
 class Artist(models.Model):
-    id_music_story = models.IntegerField()
-    id_rap_genius = models.IntegerField(default=None,null=True, blank=True)
-    facebook_name = models.CharField(max_length=100,default=None,null=True, blank=True)
-    twitter_name = models.CharField(max_length=100,default=None,null=True, blank=True)
-    instagram_name = models.CharField(max_length=100,default=None,null=True, blank=True)
-
     name = models.CharField(max_length=100)
 
+    id_music_story = models.IntegerField()
+
+    id_rap_genius = models.IntegerField(default=None,null=True, blank=True)
     genius_followers = models.IntegerField(default=None,null=True, blank=True)
     genius_image = models.URLField(default=None,null=True, blank=True)
     genius_url = models.URLField(default=None,null=True, blank=True)
+
+    instagram_name = models.CharField(max_length=100,default=None,null=True, blank=True)
+    instagram_followers = models.IntegerField(default=None,null=True, blank=True)
+
+    facebook_name = models.CharField(max_length=100,default=None,null=True, blank=True)
+    twitter_name = models.CharField(max_length=100,default=None,null=True, blank=True)
 
     def __str__(self):
         return self.name

@@ -1,8 +1,6 @@
 import logging
 import requests
 
-from data.models import RapGeniusTokens
-
 apilogger = logging.getLogger("apilogger")
 
 URL = "https://api.genius.com"
@@ -30,9 +28,13 @@ def get_data(token, id):
     json_response = rq.json()
     datas= dict()
 
-    datas['facebook_name'] = json_response['response']['artist']['facebook_name']
-    datas['instagram_name'] = json_response['response']['artist']['instagram_name']
-    datas['twitter_name'] = json_response['response']['artist']['twitter_name']
+    fb = json_response['response']['artist']['facebook_name']
+    insta = json_response['response']['artist']['instagram_name']
+    twi = json_response['response']['artist']['twitter_name']
+
+    datas['facebook_name'] = fb.split('?')[0] if fb and '?' in fb else fb
+    datas['instagram_name'] = insta.split('?')[0] if insta in '?' in insta else insta
+    datas['twitter_name'] = twi.split('?')[0] if twi and '?' in twi else twi
 
     datas['genius_followers'] = json_response['response']['artist']['followers_count']
     datas['genius_image'] = json_response['response']['artist']['image_url']

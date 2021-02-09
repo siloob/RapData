@@ -8,9 +8,6 @@ dblogger = logging.getLogger("dblogger")
 
 class Command(BaseCommand):
     help = 'get genius info, -i for ids, -d for datas'
-
-    artists = None
-    tokens = None
     
     def add_arguments(self, parser):
         parser.add_argument(
@@ -24,6 +21,13 @@ class Command(BaseCommand):
             '-d',
             '--data',
             help='get genius data',
+            action='store_true'
+        )
+
+        parser.add_argument(
+            '-a',
+            '--all',
+            help='girst get genius ids then get genius data',
             action='store_true'
         )
 
@@ -60,6 +64,9 @@ class Command(BaseCommand):
         if options['id']:
             self.get_ids()
         elif options['data']:
+            self.get_datas()
+        elif options['all']:
+            self.get_ids()
             self.get_datas()
         else:
             print('grosse merde')

@@ -125,11 +125,15 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'formatter_apirequest': {
-            'format': '[APIREQUEST] {levelname} {asctime} {module} {message}',
+            'format': '[APIREQUEST] {levelname} {asctime} [{module}] {message}',
             'style': '{',
         },
         'formatter_db': {
-            'format': '[DATABASE] {levelname} {asctime} [{module}].upper() {message}',
+            'format': '[DATABASE] {levelname} {asctime} [{module}] {message}',
+            'style': '{',
+        },
+        'formatter_scrapper': {
+            'format': '[SCRAPPER] {levelname} {asctime} [{module}] {message}',
             'style': '{',
         },
     },
@@ -146,6 +150,12 @@ LOGGING = {
             'filename': 'C:\\Users\\PETROU\\Documents\\dev\\RapData\\rapdata\\log\\info.log',
             'formatter': 'formatter_db',
         },
+        'handler_scrapper': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': 'C:\\Users\\PETROU\\Documents\\dev\\RapData\\rapdata\\log\\info.log',
+            'formatter': 'formatter_scrapper',
+        },
     },
     'loggers': {
         'apilogger': {
@@ -155,6 +165,11 @@ LOGGING = {
         },
         'dblogger': {
             'handlers': ['handler_db'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'scrapperlogger': {
+            'handlers': ['handler_scrapper'],
             'level': 'INFO',
             'propagate': True,
         },
