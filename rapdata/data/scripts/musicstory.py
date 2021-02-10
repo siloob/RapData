@@ -62,17 +62,14 @@ def get_artists(consumer_secret, token, token_secret):
     for name,id in zip(root.iter('name'),root.iter('id')):
         artists.append((name.text, id.text))
 
-    '''
-    for i in range(1, int(nbPages)):
+    for i in range(2, int(nbPages)):
         url = "http://api.music-story.com/fr/genre/190/artists?oauth_token=" + token + "&page=" + str(i)
-        url = sign(url,CONSUMER_SECRET,token_secret)
+        url = sign(url,consumer_secret,token_secret)
         apilogger.info('[REQUEST] %s' % url)
         rq = requests.get(url)
 
         root = ElementTree.fromstring(rq.content)
         for name,id in zip(root.iter('name'),root.iter('id')):
-            ar = Artist(name.text,id.text)
-            list_name_artist.append(ar)
-    '''
+            artists.append((name.text, id.text))
 
     return artists

@@ -33,7 +33,7 @@ def get_data(token, id):
     twi = json_response['response']['artist']['twitter_name']
 
     datas['facebook_name'] = fb.split('?')[0] if fb and '?' in fb else fb
-    datas['instagram_name'] = insta.split('?')[0] if insta in '?' in insta else insta
+    datas['instagram_name'] = insta.split('?')[0] if insta and '?' in insta else insta
     datas['twitter_name'] = twi.split('?')[0] if twi and '?' in twi else twi
 
     datas['genius_followers'] = json_response['response']['artist']['followers_count']
