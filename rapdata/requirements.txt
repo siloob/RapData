@@ -3,4 +3,4 @@ Django
 selenium
 beautifulsoup4
 djangorestframework
-django-rest-swagger
+django-rest-swagger==2.1.2 
