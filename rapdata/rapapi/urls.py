@@ -14,5 +14,6 @@ schema_view = get_swagger_view(title='RAPDATA API')
 urlpatterns = [
     path('', include(router.urls)),
     path('docs', schema_view),
-    path('token/', rest_views.obtain_auth_token)
+    path('token/', rest_views.obtain_auth_token),
+    path('user/', views.UserCreateView.as_view())
 ]
