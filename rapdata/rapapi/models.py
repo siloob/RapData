@@ -7,6 +7,8 @@ from data.models import Artist
 # Create your models here.
 
 class ArtistViewSet(viewsets.ReadOnlyModelViewSet):
-    artists = Artist.objects.all()
+    artists = Artist.objects.all().order_by('id')
     serializer_class = ArtistSerializer
-    
+
+    class Meta:
+        ordering = ['-id']

@@ -15,5 +15,6 @@ urlpatterns = [
     path('', include(router.urls)),
     path('docs', schema_view),
     path('token/', rest_views.obtain_auth_token),
-    path('user/', views.UserCreateView.as_view())
+    path('user/', views.UserCreateView.as_view()),
+    path('requests/', views.GetRequestLimit.as_view())
 ]

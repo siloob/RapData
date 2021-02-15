@@ -140,29 +140,39 @@ LOGGING = {
             'format': '[SCRAPPER] {levelname} {asctime} [{module}] {message}',
             'style': '{',
         },
+        'formatter_api': {
+            'format': '[API] {levelname} {asctime} [{module}] {message}',
+            'style': '{',
+        },
     },
     'handlers': {
         'handler_apirequest': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': 'C:\\Users\\PETROU\\Documents\\dev\\RapData\\rapdata\\log\\info.log',
+            'filename': '/home/nepal/Documents/dev/RapData/info.log',
             'formatter': 'formatter_apirequest',
         },
         'handler_db': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': 'C:\\Users\\PETROU\\Documents\\dev\\RapData\\rapdata\\log\\info.log',
+            'filename': '/home/nepal/Documents/dev/RapData/info.log',
             'formatter': 'formatter_db',
         },
         'handler_scrapper': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': 'C:\\Users\\PETROU\\Documents\\dev\\RapData\\rapdata\\log\\info.log',
+            'filename': '/home/nepal/Documents/dev/RapData/info.log',
             'formatter': 'formatter_scrapper',
+        },
+        'handler_api': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': '/home/nepal/Documents/dev/RapData/info.log',
+            'formatter': 'formatter_api',
         },
     },
     'loggers': {
-        'apilogger': {
+        'apirequestlogger': {
             'handlers': ['handler_apirequest'],
             'level': 'INFO',
             'propagate': True,
@@ -174,6 +184,11 @@ LOGGING = {
         },
         'scrapperlogger': {
             'handlers': ['handler_scrapper'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'apilogger': {
+            'handlers': ['handler_api'],
             'level': 'INFO',
             'propagate': True,
         },
@@ -189,7 +204,15 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
-    ]
+    ],
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rapapi.throttles.SimpleUserRateThrottle',
+        'rapapi.throttles.CustomerRateThrottle'
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'user': '2/min',
+        'customer': '600/min'
+    }
 }
 
 SWAGGER_SETTINGS = {
