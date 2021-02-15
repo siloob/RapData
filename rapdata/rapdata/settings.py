@@ -203,15 +203,16 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAuthenticated'
     ],
     'DEFAULT_THROTTLE_CLASSES': [
-        'rapapi.throttles.SimpleUserRateThrottle',
-        'rapapi.throttles.CustomerRateThrottle'
+        'rapapi.throttles.CustomThrottle',
+        'rapapi.throttles.AdminRateThrottle'
     ],
     'DEFAULT_THROTTLE_RATES': {
+        'admin': '10/s',
         'user': '2/min',
-        'customer': '600/min'
+        'customer': '600/min',
     }
 }
 

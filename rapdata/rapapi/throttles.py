@@ -1,19 +1,24 @@
-from rest_framework.throttling import UserRateThrottle
+from django.contrib.auth.models import User
+from django.contrib.auth.models import Group
+from rest_framework.settings import api_settings
 
-class SimpleUserRateThrottle(UserRateThrottle):
-    scope = 'user'
+from rest_framework.throttling import BaseThrottle, UserRateThrottle
+
+class CustomThrottle(UserRateThrottle):
     
-    def throttle_success(self):
-        """
-        Inserts the current request's timestamp along with the key
-        into the cache.
-        """
-        self.history.insert(0, self.now)
-        self.cache.set(self.key, self.history, self.duration)
+    def allow_request(self, request, view):
+        group = request.user.groups.first()
+        if group:
+            self.scope = group.name
+        else:
+            return False
 
-        print(self.history)
-        print(self.cache)
+        self.rate = self.get_rate()
+        self.num_requests, self.duration = self.parse_rate(self.rate)
+        
+        return super().allow_request(request, view)
+
+class AdminRateThrottle(BaseThrottle):
+    def allow_request(self, request, view):
         return True
 
-class CustomerRateThrottle(UserRateThrottle):
-    scope = 'customer'

@@ -12,7 +12,7 @@ from rest_framework.exceptions import Throttled
 
 from data.models import Artist
 from rapapi.serializers import ArtistSerializer
-from rapapi.throttles import SimpleUserRateThrottle, CustomerRateThrottle
+from rapapi.throttles import CustomThrottle, AdminRateThrottle
 
 # Create your views here.
 
@@ -21,6 +21,7 @@ apilogger = logging.getLogger('apilogger')
 class ArtistViewSet(viewsets.ModelViewSet):
     queryset = Artist.objects.all().order_by('id')
     serializer_class = ArtistSerializer
+    throttle_classes = [CustomThrottle]
 
     def throttled(self, request, wait):
         raise Throttled(detail={
@@ -31,6 +32,8 @@ class ArtistViewSet(viewsets.ModelViewSet):
         ordering = ['-id']
 
 class UserCreateView(APIView):
+    throttle_classes = [AdminRateThrottle]
+
     def post(self, request, format=None):
         data = request.data
         username = data['username']
@@ -53,6 +56,8 @@ class UserCreateView(APIView):
 
 
 class GetRequestLimit(APIView):
+    throttle_classes = [CustomThrottle]
+
     def max_data(self,datas):
         result = (0,0)
         for data in datas:
