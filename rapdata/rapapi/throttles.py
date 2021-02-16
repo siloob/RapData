@@ -18,7 +18,3 @@ class CustomThrottle(UserRateThrottle):
         
         return super().allow_request(request, view)
 
-class AdminRateThrottle(BaseThrottle):
-    def allow_request(self, request, view):
-        return True
-

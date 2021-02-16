@@ -211,7 +211,7 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_THROTTLE_RATES': {
         'admin': '10/s',
-        'user': '2/min',
+        'user': '10/min',
         'customer': '600/min',
     }
 }

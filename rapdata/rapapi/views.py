@@ -12,7 +12,7 @@ from rest_framework.exceptions import Throttled
 
 from data.models import Artist
 from rapapi.serializers import ArtistSerializer
-from rapapi.throttles import CustomThrottle, AdminRateThrottle
+from rapapi.throttles import CustomThrottle
 
 # Create your views here.
 
@@ -32,7 +32,7 @@ class ArtistViewSet(viewsets.ModelViewSet):
         ordering = ['-id']
 
 class UserCreateView(APIView):
-    throttle_classes = [AdminRateThrottle]
+    permission_classes = [IsAdminUser]
 
     def post(self, request, format=None):
         data = request.data
@@ -56,20 +56,17 @@ class UserCreateView(APIView):
 
 
 class GetRequestLimit(APIView):
-    throttle_classes = [CustomThrottle]
+    throttle_classes = [CustomThrottle]  
 
     def max_data(self,datas):
-        result = (0,0)
+        result = ({"nb_requests_max":0,"nb_requests":0})
         for data in datas:
-            if data[0] > result[0]:
-                result = data
+            if data[0] > result["nb_requests_max"]:
+                result["nb_requests_max"] = data[0]
+                result["nb_requests"] = data[1]
         return result
 
     def get_nb_requests(self, request):
-        """
-        Check if request should be throttled.
-        Raises an appropriate exception if the request is throttled.
-        """
         throttle_datas = []
         for throttle in self.get_throttles():
             if throttle.allow_request(request, self):
@@ -77,11 +74,8 @@ class GetRequestLimit(APIView):
                 nb_requests = len(throttle.cache.get(throttle.key, []))
                 throttle_datas.append((nb_requests_max, nb_requests))
         
-        print(throttle_datas)
         return self.max_data(throttle_datas) 
 
     def get(self, request, format=None):
-        token = request.headers['Authorization'].split(' ')[1]
-
         return Response(self.get_nb_requests(request))
 
