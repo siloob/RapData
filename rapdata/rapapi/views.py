@@ -23,11 +23,6 @@ class ArtistViewSet(viewsets.ModelViewSet):
     serializer_class = ArtistSerializer
     throttle_classes = [CustomThrottle]
 
-    def throttled(self, request, wait):
-        raise Throttled(detail={
-              "message":"request limit exceeded"
-        })
-    
     class Meta:
         ordering = ['-id']
 

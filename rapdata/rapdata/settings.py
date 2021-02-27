@@ -207,13 +207,13 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_THROTTLE_CLASSES': [
         'rapapi.throttles.CustomThrottle',
-        'rapapi.throttles.AdminRateThrottle'
     ],
     'DEFAULT_THROTTLE_RATES': {
         'admin': '10/s',
         'user': '10/min',
         'customer': '600/min',
-    }
+    },
+    'EXCEPTION_HANDLER': 'rapapi.exceptions.custom_exception_handler'
 }
 
 SWAGGER_SETTINGS = {
