@@ -38,10 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'data.apps.DataConfig',
-    'rapapi.apps.RapapiConfig',
     'rest_framework_swagger',
     'rest_framework.authtoken',
+
+    'data.apps.DataConfig',
+    'rapapi.apps.RapapiConfig',
+    'rapdatatest.apps.RapdatatestConfig'
 ]
 
 MIDDLEWARE = [

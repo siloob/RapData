@@ -1,0 +1,19 @@
+[
+    {
+        "model": "data.artist",
+        "pk": 1,
+        "fields": {
+            "id": 29,
+            "name": "Kool Shen",
+            "id_music_story": 5094,
+            "id_rap_genius": 12547,
+            "genius_followers": 28,
+            "genius_image": "https://images.genius.com/adfc115df7aa8098e784e49772251f52.1000x1000x1.jpg",
+            "genius_url": "https://genius.com/artists/Kool-shen",
+            "instagram_name": "koolshenofficiel",
+            "instagram_followers": null,
+            "facebook_name": "KoolShenOfficiel",
+            "twitter_name": "KSofficiel"
+        }
+    }
+]
