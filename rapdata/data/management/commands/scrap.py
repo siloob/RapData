@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 import logging
+import time
 
 from data.models import RapGeniusTokens, Artist
 from data.scripts.scrap import get_twitter_datas, get_instagram_datas, get_facebook_datas
@@ -51,7 +52,9 @@ class Command(BaseCommand):
         artists = Artist.objects.exclude(facebook_name__exact='').exclude(facebook_name__isnull=True)
         cpt = 0
         for artist in artists:
+            print(artist.name)
             nb_followers = get_facebook_datas(artist.facebook_name)
+            time.sleep(2)
             if nb_followers:
                 artist.facebook_followers = nb_followers
                 artist.save()
