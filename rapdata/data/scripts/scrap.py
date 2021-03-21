@@ -1,28 +1,33 @@
 import requests
 import logging
-import time
 import re
 
 from bs4 import BeautifulSoup
-from data.scripts.seleniummanager import get
+import data.scripts.seleniummanager as seleniummanager
 
 scraplogger = logging.getLogger('scrapperlogger')
 
-def get(url):    
-    options = Options()
-    #options.add_argument("--headless")
-    browser = webdriver.Firefox(executable_path='/home/nepal/Documents/dev/RapData/driver/geckodriver', firefox_options=options)  
-    browser.get(url)
-    #time.sleep(2)  
-    #print(browser.find('css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0')) 
-    #browser.quit()
-
 def get_twitter_datas(name):
     url = ('https://twitter.com/%s' % name)
-    get(url)
-    #scraplogger.info('[GET] %s' % url)
-    #nb_followers = re.findall('followers_count&quot;:(.*),&quot;fr',rq.text)[0].replace(' ','')
-    #return nb_followers
+    followers = seleniummanager.get_twitter(url)
+    if followers is None:
+        return None
+    if 'M' in followers:
+        numbers = followers.replace('M','')
+        if '.' not in numbers:
+            followers = int(numbers)*1000000
+        else:
+            numbers = numbers.split('.')
+            followers = int(numbers[0])*1000000 + int(numbers[1])*100000
+    elif 'K' in followers:
+        numbers = followers.replace('K','')
+        if '.' not in numbers:
+            followers = int(numbers)*100000
+        else:
+            numbers = numbers.split('.')
+            followers = int(numbers[0])*100000 + int(numbers[1])*10000
+
+    return int(followers)
 
 def get_instagram_datas(name):
     url = ('https://www.instagram.com/%s' % name)

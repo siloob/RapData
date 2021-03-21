@@ -16,7 +16,9 @@ class Artist(models.Model):
     instagram_followers = models.IntegerField(default=None,null=True, blank=True)
 
     facebook_name = models.CharField(max_length=100,default=None,null=True, blank=True)
+
     twitter_name = models.CharField(max_length=100,default=None,null=True, blank=True)
+    twitter_followers = models.IntegerField(default=None,null=True, blank=True)
 
     def __str__(self):
         return self.name

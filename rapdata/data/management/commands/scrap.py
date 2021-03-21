@@ -4,11 +4,12 @@ import time
 
 from data.models import RapGeniusTokens, Artist
 from data.scripts.scrap import get_twitter_datas, get_instagram_datas, get_facebook_datas
+from data.scripts.seleniummanager import start_browser, exit_browser
 
 dblogger = logging.getLogger("dblogger")
 
 class Command(BaseCommand):
-    help = 'scrap daats, -t twitter, _f facebook, -i instagram'
+    help = 'scrap daats, -t twitter, -f facebook, -i instagram'
     
     def add_arguments(self, parser):
         parser.add_argument(
@@ -33,11 +34,17 @@ class Command(BaseCommand):
         )
 
     def scrap_twitter(self):
+        count = 0
         artists = Artist.objects.filter(twitter_name__isnull=False)
+        start_browser()
         for artist in artists:
             nb_followers = get_twitter_datas(artist.twitter_name)
-            #print(nb_followers)
-            break
+            if nb_followers is not None:
+                artist.twitter_followers = nb_followers
+                artist.save()
+                count += 1
+        exit_browser()
+        dblogger.info('[UPDATE] %i twitter followers added' % count)
 
     def scrap_instagram(self):
         artists = Artist.objects.exclude(instagram_name__exact='').exclude(instagram_name__isnull=True)
@@ -52,7 +59,6 @@ class Command(BaseCommand):
         artists = Artist.objects.exclude(facebook_name__exact='').exclude(facebook_name__isnull=True)
         cpt = 0
         for artist in artists:
-            print(artist.name)
             nb_followers = get_facebook_datas(artist.facebook_name)
             time.sleep(2)
             if nb_followers:

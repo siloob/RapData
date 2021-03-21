@@ -146,6 +146,10 @@ LOGGING = {
             'format': '[API] {levelname} {asctime} [{module}] {message}',
             'style': '{',
         },
+        'formatter_selenium': {
+            'format': '[SELENIUM] {levelname} {asctime} [{module}] {message}',
+            'style': '{',
+        },
     },
     'handlers': {
         'handler_apirequest': {
@@ -172,6 +176,12 @@ LOGGING = {
             'filename': '/home/nepal/Documents/dev/RapData/info.log',
             'formatter': 'formatter_api',
         },
+        'handler_selenium': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': '/home/nepal/Documents/dev/RapData/info.log',
+            'formatter': 'formatter_selenium',
+        },
     },
     'loggers': {
         'apirequestlogger': {
@@ -191,6 +201,11 @@ LOGGING = {
         },
         'apilogger': {
             'handlers': ['handler_api'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'seleniumlogger': {
+            'handlers': ['handler_selenium'],
             'level': 'INFO',
             'propagate': True,
         },

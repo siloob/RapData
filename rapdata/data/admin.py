@@ -4,6 +4,9 @@ from data.models import Artist, MusicStoryTokens, RapGeniusTokens
 
 # Register your models here.
 
-admin.site.register(Artist)
+class ArtistAdmin(admin.ModelAdmin):
+    search_fields = ('name',)
+
+admin.site.register(Artist, ArtistAdmin)
 admin.site.register(MusicStoryTokens)
 admin.site.register(RapGeniusTokens)
