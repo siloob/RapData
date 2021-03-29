@@ -4,13 +4,18 @@ import time
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver import ActionChains
+from selenium.webdriver.common.keys import Keys
 
 logger = logging.getLogger('seleniumlogger')
 
 driver = None
+id_insta = None
+csrf_insta = None
 
 def start_browser():
     global driver
+    global id_insta
     if driver is None:
         options = Options()
         # options.add_argument("--headless")
@@ -47,6 +52,40 @@ def get_twitter(url):
             followers = None
         finally:
             return followers
+
+def init_driver_insta(cookies):
+    global driver
+    if driver is not None:
+        driver.get('https://www.instagram.com')
+        time.sleep(2)
+        try:
+            accept = driver.find_elements_by_xpath("//button[contains(@class, 'aOOlW') and " +
+                                          "contains(@class, 'bIiDR')]")
+            accept[0].click()
+            for cookie in cookies:
+                driver.add_cookie(cookie)
+        except (NoSuchElementException, IndexError):
+            pass
+
+
+def get_insta(url, cookies):
+    global driver
+    if driver is not None:
+        followers = None
+        for cookie in cookies:
+            driver.add_cookie(cookie)
+
+        driver.get(url)
+        logger.info(url)
+        time.sleep(2)
+        try:
+            followers = driver.find_elements_by_xpath("//span[contains(@class, 'g47SY')]")[1].text
+        except NoSuchElementException:
+            logger.info('[TWITTER] NoSuchElementException on %s' % url)
+            followers = None
+        finally:
+            return followers
+
 
 def exit_browser():
     global driver
