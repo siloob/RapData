@@ -8,9 +8,9 @@ import data.scripts.seleniummanager as seleniummanager
 
 scraplogger = logging.getLogger('scrapperlogger')
 
-def get_twitter_datas(name):
+def get_twitter_datas(driver, name):
     url = ('https://twitter.com/%s' % name)
-    followers = seleniummanager.get_twitter(url)
+    followers = seleniummanager.get_twitter(driver, url)
     if followers is None:
         return None
     if 'M' in followers:
@@ -84,9 +84,9 @@ def get_insta_cookies():
             }
         ]
 
-def get_instagram_datas(name, cookies):
+def get_instagram_datas(driver, name, cookies):
     url = ('https://www.instagram.com/%s/' % name)
-    followers = seleniummanager.get_insta(url, cookies)
+    followers = seleniummanager.get_insta(driver, url, cookies)
     if followers is None:
         return None
     if 'm' in followers:
@@ -108,24 +108,30 @@ def get_instagram_datas(name, cookies):
         followers=int(numbers)
     return int(followers)
 
-def get_facebook_datas(name):
-    url = ('https://www.facebook.com/%s' % name)
+def get_facebook_datas(driver, name):
+    if 'facebook' in name:
+        url = ('https://www.facebook.com/%s' % name.split('/')[-1])
+    else:
+        url = ('https://www.facebook.com/%s' % name)
+    followers = seleniummanager.get_facebook(driver, url)
     scraplogger.info(('[GET] %s' % url))
-    print(url)
-    rq = requests.get(url)
+    if followers is None:
+        return None
+    if ',' in followers:
+        followers = followers.replace(',','')
+    if 'M' in followers:
+        numbers = followers.replace('M','')
+        if '.' not in numbers:
+            followers = int(numbers)*1000000
+        else:
+            numbers = numbers.split('.')
+            followers = int(numbers[0])*1000000 + int(numbers[1])*100000
+    elif 'K' in followers:
+        numbers = followers.replace('K','')
+        if '.' not in numbers:
+            followers = int(numbers)*1000
+        else:
+            numbers = numbers.split('.')
+            followers = int(numbers[0])*1000 + int(numbers[1])*100
 
-    soup = BeautifulSoup(rq.text,'html.parser')
-    likes = soup.find_all('span',attrs={'class':'_52id _50f5 _50f7'})
-    likes = int(likes[0].text.split('m')[0].replace('\xa0','')) if likes else None
-    
-    if likes is None:
-        url_followers = url+'/followers'
-        likes = soup.find_all('a',attrs={'href': url_followers})
-        '''
-        print('followers')
-        print(url_followers)
-        print(likes)
-        '''
-
-    print(likes)
-    return likes
+    return int(followers)

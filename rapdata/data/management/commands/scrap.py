@@ -1,10 +1,9 @@
 from django.core.management.base import BaseCommand, CommandError
 import logging
-import time
 
 from data.models import RapGeniusTokens, Artist
 from data.scripts.scrap import get_twitter_datas, get_instagram_datas, get_facebook_datas, get_insta_cookies
-from data.scripts.seleniummanager import start_browser, exit_browser, init_driver_insta
+import data.scripts.seleniummanager as seleniummanager
 
 dblogger = logging.getLogger("dblogger")
 
@@ -36,39 +35,40 @@ class Command(BaseCommand):
     def scrap_twitter(self):
         count = 0
         artists = Artist.objects.filter(twitter_name__isnull=False)
-        start_browser()
+        driver = seleniummanager.start_browser()
         for artist in artists:
-            nb_followers = get_twitter_datas(artist.twitter_name)
+            nb_followers = get_twitter_datas(driver, artist.twitter_name)
             if nb_followers is not None:
                 artist.twitter_followers = nb_followers
                 artist.save()
                 count += 1
-        exit_browser()
+        seleniummanager.exit_browser(driver)
         dblogger.info('[UPDATE] %i twitter followers added' % count)
 
     def scrap_instagram(self):
         count = 0
         cookies = get_insta_cookies()
         if cookies is not None:
-            start_browser()
-            init_driver_insta(cookies)
+            driver = seleniummanager.start_browser()
+            driver = seleniummanager.init_driver_insta(driver, cookies)
             artists = Artist.objects.exclude(instagram_name__exact='').exclude(instagram_name__isnull=True)
 
             for artist in artists:
-                nb_followers = get_instagram_datas(artist.instagram_name, cookies)
+                nb_followers = get_instagram_datas(driver, artist.instagram_name, cookies)
                 artist.instagram_followers = nb_followers
                 artist.save()
                 count += 1
 
             dblogger.info(('[UPDATE] added instagram followers : %i' % count))
-            exit_browser()
+            seleniummanager.exit_browser(driver)
 
     def scrap_facebook(self):
         artists = Artist.objects.exclude(facebook_name__exact='').exclude(facebook_name__isnull=True)
         cpt = 0
+        driver = seleniummanager.start_browser()
+        driver = seleniummanager.connect_facebook(driver)
         for artist in artists:
-            nb_followers = get_facebook_datas(artist.facebook_name)
-            time.sleep(2)
+            nb_followers = get_facebook_datas(driver, artist.facebook_name)
             if nb_followers:
                 artist.facebook_followers = nb_followers
                 artist.save()
