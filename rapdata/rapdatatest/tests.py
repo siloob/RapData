@@ -2,9 +2,9 @@ from django.test import TestCase
 from rest_framework.test import APIRequestFactory, force_authenticate
 
 from rapapi.views import ArtistViewSet, UserCreateView, GetRequestLimit
-from rapapi.models import Artist
 
 from rapdatatest.testutils.utils import create_user, get_artist, get_user_from_username
+
 
 # Create your tests here.
 
@@ -15,12 +15,12 @@ class ArtistViewSetTest(TestCase):
         self.factory = APIRequestFactory()
         self.user = create_user()
         self.artist = get_artist()
-        self.view = ArtistViewSet.as_view({'get':'list'}) 
-        
+        self.view = ArtistViewSet.as_view({'get': 'list'})
+
     def test_get_all_unauth(self):
         request = self.factory.get('/api/artists')
         response = self.view(request)
-        
+
         self.assertEqual(response.status_code, 401)
 
     def test_get_all_auth_as_user(self):
@@ -36,11 +36,12 @@ class ArtistViewSetTest(TestCase):
         response = self.view(request)
 
         self.assertEqual(response.status_code, 200)
-        
+
         self.assertEqual(response.data['results'][0]['name'], self.artist.name)
         self.assertEqual(response.data['results'][0]['id_music_story'], self.artist.id_music_story)
         self.assertEqual(response.data['results'][0]['id_rap_genius'], self.artist.id_rap_genius)
         self.assertEqual(response.data['results'][0]['genius_followers'], self.artist.genius_followers)
+
 
 class UserCreateTest(TestCase):
 
@@ -58,9 +59,8 @@ class UserCreateTest(TestCase):
         force_authenticate(request, user=self.user)
         response = self.view(request)
         response.render()
-        
-        self.assertEqual(response.status_code, 403)
 
+        self.assertEqual(response.status_code, 403)
 
     def test_create_user_from_admin(self):
         self.user.is_staff = True
@@ -78,8 +78,9 @@ class UserCreateTest(TestCase):
         self.assertEqual(user_created.username, self.data['username'])
         self.assertEqual(user_created.password, self.data['password'])
 
+
 class GetLimitsRequestsTest(TestCase):
-    
+
     def setUp(self):
         self.factory = APIRequestFactory()
         self.user = create_user()

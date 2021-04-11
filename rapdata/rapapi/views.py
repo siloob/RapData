@@ -2,13 +2,13 @@ import logging
 
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
+from django.core.mail import send_mail
 
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser
 from rest_framework.authtoken.models import Token
-from rest_framework.exceptions import Throttled
 
 from data.models import Artist
 from rapapi.serializers import ArtistSerializer
@@ -49,6 +49,26 @@ class UserCreateView(APIView):
         token = Token.objects.create(user=user)
         return Response({"token": token.key})
 
+def comment_is_correct(user_email,user_pseudo, user_comment):
+    return True
+
+class sendMail(APIView):
+    permission_classes = [IsAdminUser]
+
+    def post(self, request, format=None):
+        data = request.data
+        result = 0
+        user_email = data['email']
+        user_pseudo = data['pseudo']
+        user_comment = data['comment']
+        if comment_is_correct(user_email,user_pseudo, user_comment):
+            result = send_mail(
+                'New comment by %s' % user_pseudo,
+                user_comment,
+                user_email,[],
+                fail_silently=False,
+            )
+        return 0
 
 class GetRequestLimit(APIView):
     throttle_classes = [CustomThrottle]  

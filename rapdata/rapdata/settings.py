@@ -242,3 +242,8 @@ SWAGGER_SETTINGS = {
         }
     },
 }
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'siloob75@gmail.com'
+EMAIL_HOST_PASSWORD = '`\\R8^H5n+#A\\NAnh'
+EMAIL_PORT = '465'

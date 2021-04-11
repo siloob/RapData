@@ -1,5 +1,4 @@
 from django.urls import include, path
-from rest_framework import routers
 from rest_framework.authtoken import views as rest_views
 from rest_framework_swagger.views import get_swagger_view
 from rapapi.routers import CustomReadOnlyRouter
@@ -16,5 +15,6 @@ urlpatterns = [
     path('docs', schema_view),
     path('token/', rest_views.obtain_auth_token),
     path('user/', views.UserCreateView.as_view()),
-    path('requests/', views.GetRequestLimit.as_view())
+    path('requests/', views.GetRequestLimit.as_view()),
+    path('sendMail/', views.sendMail.as_view())
 ]
