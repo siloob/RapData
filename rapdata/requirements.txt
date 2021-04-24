@@ -3,4 +3,5 @@ Django
 selenium
 beautifulsoup4
 djangorestframework
-django-rest-swagger==2.1.2 
+django-rest-swagger==2.1.2
+django-cors-headers

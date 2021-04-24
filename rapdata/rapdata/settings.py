@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_swagger',
     'rest_framework.authtoken',
+    'corsheaders',
 
     'data.apps.DataConfig',
     'rapapi.apps.RapapiConfig',
@@ -47,6 +48,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -126,6 +128,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+LOG_FILE_PATH = 'C:\\Users\\PETROU\\Documents\\dev\\RapData\\info.log'
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -155,31 +159,31 @@ LOGGING = {
         'handler_apirequest': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': '/home/nepal/Documents/dev/RapData/info.log',
+            'filename': LOG_FILE_PATH,
             'formatter': 'formatter_apirequest',
         },
         'handler_db': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': '/home/nepal/Documents/dev/RapData/info.log',
+            'filename': LOG_FILE_PATH,
             'formatter': 'formatter_db',
         },
         'handler_scrapper': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': '/home/nepal/Documents/dev/RapData/info.log',
+            'filename': LOG_FILE_PATH,
             'formatter': 'formatter_scrapper',
         },
         'handler_api': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': '/home/nepal/Documents/dev/RapData/info.log',
+            'filename': LOG_FILE_PATH,
             'formatter': 'formatter_api',
         },
         'handler_selenium': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': '/home/nepal/Documents/dev/RapData/info.log',
+            'filename': LOG_FILE_PATH,
             'formatter': 'formatter_selenium',
         },
     },
@@ -226,7 +230,6 @@ REST_FRAMEWORK = {
         'rapapi.throttles.CustomThrottle',
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'admin': '10/s',
         'user': '10/min',
         'customer': '600/min',
     },
@@ -243,7 +246,26 @@ SWAGGER_SETTINGS = {
     },
 }
 
+#configure emails end
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'siloob75@gmail.com'
-EMAIL_HOST_PASSWORD = '`\\R8^H5n+#A\\NAnh'
-EMAIL_PORT = '465'
+EMAIL_HOST_USER = 'rapdatafr@gmail.com'
+EMAIL_HOST_PASSWORD = '3tbyYjiigNcaXcnE'
+EMAIL_PORT = '587'
+EMAIL_USE_TLS = True
+
+#Allowed origin, specific for dev, need to be open then
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:4200"
+]
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with'
+]

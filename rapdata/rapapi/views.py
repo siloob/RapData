@@ -65,7 +65,8 @@ class sendMail(APIView):
             result = send_mail(
                 'New comment by %s' % user_pseudo,
                 user_comment,
-                user_email,[],
+                user_email,
+                ['rapdatafr@gmail.com'],
                 fail_silently=False,
             )
         return 0

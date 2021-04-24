@@ -7,6 +7,9 @@ from rest_framework.throttling import BaseThrottle, UserRateThrottle
 
 class CustomThrottle(UserRateThrottle):
     def allow_request(self, request, view):
+        if request.user.is_staff:
+            return True
+
         if self.rate is None:
             return True
 
@@ -16,7 +19,6 @@ class CustomThrottle(UserRateThrottle):
 
         self.history = self.cache.get(self.key, [])
         self.now = self.timer()
-
 
         group = request.user.groups.first()
         if group:
