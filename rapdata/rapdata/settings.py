@@ -246,13 +246,6 @@ SWAGGER_SETTINGS = {
     },
 }
 
-#configure emails end
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'rapdatafr@gmail.com'
-EMAIL_HOST_PASSWORD = '3tbyYjiigNcaXcnE'
-EMAIL_PORT = '587'
-EMAIL_USE_TLS = True
-
 #Allowed origin, specific for dev, need to be open then
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200"
@@ -269,3 +262,7 @@ CORS_ALLOW_HEADERS = [
     'x-csrftoken',
     'x-requested-with'
 ]
+
+EMAIL_HOST = 'smtp.gmail.com' #host
+EMAIL_PORT = '587' #port
+EMAIL_USE_TLS = True #use_tls

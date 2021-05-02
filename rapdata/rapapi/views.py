@@ -1,8 +1,9 @@
 import logging
+from http import HTTPStatus
+from rapapi.scripts.mail_helper import send_email
 
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
-from django.core.mail import send_mail
 
 from rest_framework import viewsets
 from rest_framework.views import APIView
@@ -31,20 +32,19 @@ class UserCreateView(APIView):
 
     def post(self, request, format=None):
         data = request.data
-        username = data['username']
-        password = data['password']
+        username = data['pseudo']
         
         user, created = User.objects.get_or_create(username=username)
         if not created:
-            return Response({"error": "username is not available"})
+            return Response({"error": "username is not available"}, status=HTTPStatus.IM_A_TEAPOT)
         
-        user.password = password
+        user.password = data['password']
+        user.first_name = data['pseudo']
         user.save()
         apilogger.info('[CREATE] user %s created' % user.username)
 
         user_group = Group.objects.get(name='user') 
         user_group.user_set.add(user)
-
         
         token = Token.objects.create(user=user)
         return Response({"token": token.key})
@@ -62,14 +62,13 @@ class sendMail(APIView):
         user_pseudo = data['pseudo']
         user_comment = data['comment']
         if comment_is_correct(user_email,user_pseudo, user_comment):
-            result = send_mail(
+            result = send_email(
                 'New comment by %s' % user_pseudo,
                 user_comment,
                 user_email,
-                ['rapdatafr@gmail.com'],
-                fail_silently=False,
+                'rapdatafr@gmail.com'
             )
-        return 0
+        return Response(result)
 
 class GetRequestLimit(APIView):
     throttle_classes = [CustomThrottle]  
