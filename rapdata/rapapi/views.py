@@ -40,6 +40,7 @@ class UserCreateView(APIView):
         
         user.password = data['password']
         user.first_name = data['pseudo']
+        user.email = data['email']
         user.save()
         apilogger.info('[CREATE] user %s created' % user.username)
 
@@ -47,6 +48,14 @@ class UserCreateView(APIView):
         user_group.user_set.add(user)
         
         token = Token.objects.create(user=user)
+
+        send_email(
+            'Your token for rapdata',
+            'Hello %s tanks for subscribing.\nHere is your token : %s' % (data['pseudo'], token.key),
+            'rapdatafr@gmail.com',
+            data['email']
+        )
+
         return Response({"token": token.key})
 
 def comment_is_correct(user_email,user_pseudo, user_comment):
