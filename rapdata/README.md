@@ -1,10 +1,6 @@
-TODO :
+INSTALLATION
 
-scrap :
-spotify
-deezer
-
-
-feat:
-get rapgenius client token automatically
-get groupe
+setup venv
+run pip install -r requirements.txt
+custom mail user nad password in properties.py
+run python manage.py runserver
