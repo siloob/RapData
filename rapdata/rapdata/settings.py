@@ -20,13 +20,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'pkokn8edswxby3pexwazttkzif#eywz$x8_@6e=%-$@))w)^%5'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ["51.210.4.4"]
 
 # Application definition
 
@@ -128,7 +126,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-LOG_FILE_PATH = 'C:\\Users\\PETROU\\Documents\\dev\\RapData\\info.log'
+LOG_FILE_PATH = '/home/ubuntu/RapData/rapdata/info.log'
 
 LOGGING = {
     'version': 1,

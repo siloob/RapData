@@ -4,15 +4,17 @@ import time
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 logger = logging.getLogger('seleniumlogger')
 
 
+
 def start_browser():
     options = Options()
-    # options.add_argument("--headless")
-    driver = webdriver.Firefox(executable_path='/home/nepal/Documents/dev/RapData/driver/geckodriver',
-                               firefox_options=options)
+    options.add_argument("--headless")
+    driver = webdriver.Firefox(executable_path='/usr/bin/geckodriver', firefox_options=options)
+
     return driver
 
 
